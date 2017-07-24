@@ -127,7 +127,7 @@ class Hybrid_Providers_Orcid extends Hybrid_Provider_Model_OAuth2
 		}
 
 		$this->response = $response;
-
+		
 		return $response;  
 	}
 	

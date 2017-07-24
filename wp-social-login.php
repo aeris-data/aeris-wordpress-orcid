@@ -256,9 +256,8 @@ require_once( WORDPRESS_SOCIAL_LOGIN_ABS_PATH . 'includes/widgets/wsl.error.page
 require_once( WORDPRESS_SOCIAL_LOGIN_ABS_PATH . 'includes/widgets/wsl.loading.screens.php'       ); // Generate WSL loading screens
 
 #Widget
-include_once plugin_dir_path(__FILE__).'/aeris_wordpress_widget_orcid.php';
+include_once plugin_dir_path(__FILE__).'/webcomponents_orcid.php';
 
-add_action('widgets_init', function(){ register_widget('WidgetOrcid');});
 
 # WSL Admin interfaces
 if( is_admin() && ( !defined( 'DOING_AJAX' ) || !DOING_AJAX ) )
