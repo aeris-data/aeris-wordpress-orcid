@@ -523,7 +523,7 @@ function wsl_process_login_get_user_data( $provider, $redirect_to )
 	$requested_user_login     = '';
 	$requested_user_email     = '';
 	$wordpress_user_id        = 0;
-
+	
 	/* 1. Grab the user profile from social network */
 
 	if( ! ( isset( $_SESSION['wsl::userprofile'] ) && $_SESSION['wsl::userprofile'] && $hybridauth_user_profile = json_decode( $_SESSION['wsl::userprofile'] ) ) )
@@ -532,6 +532,7 @@ function wsl_process_login_get_user_data( $provider, $redirect_to )
 
 		$_SESSION['wsl::userprofile'] = json_encode( $hybridauth_user_profile );
 	}
+	
 
 	$adapter = wsl_process_login_get_provider_adapter( $provider );
 
@@ -571,12 +572,31 @@ function wsl_process_login_get_user_data( $provider, $redirect_to )
 	}
 
 
-
-	// because instagram doesn't (do any?) have an email, we need to check if the option "require email" is set and then get the email from
-	// the user BEFORE we filter by email address
-
+	/* 3. Check if user exist in database by looking for the couple (Provider name, Provider user ID) or verified email */
+	
+	// check if user already exist in wslusersprofiles
+	$user_id = (int) wsl_get_stored_hybridauth_user_id_by_provider_and_provider_uid( $provider, $hybridauth_user_profile->identifier );
+	
+	// if not found in wslusersprofiles, then check his verified email
+	if( ! $user_id && ! empty( $hybridauth_user_profile->emailVerified ) )
+	{
+		// check if the verified email exist in wp_users
+		$user_id = (int) wsl_wp_email_exists( $hybridauth_user_profile->emailVerified );
+		
+		// the user exists in Wordpress
+		$wordpress_user_id = $user_id;
+		
+		// check if the verified email exist in wslusersprofiles
+		if( ! $user_id )
+		{
+			$user_id = (int) wsl_get_stored_hybridauth_user_id_by_email_verified( $hybridauth_user_profile->emailVerified );
+		}
+	}
+	
+	
         /* 4 Deletegate detection of user id to custom filters hooks */
-
+		
+		
         $user_id = (int) wsl_get_stored_hybridauth_user_id_by_provider_and_provider_uid( $provider, $hybridauth_user_profile->identifier );
 
 
@@ -700,29 +720,7 @@ function wsl_process_login_get_user_data( $provider, $redirect_to )
 		}
 	}
 
-	/* 3. Check if user exist in database by looking for the couple (Provider name, Provider user ID) or verified email */
-
-	// check if user already exist in wslusersprofiles
-	$user_id = (int) wsl_get_stored_hybridauth_user_id_by_provider_and_provider_uid( $provider, $hybridauth_user_profile->identifier );
-
-	// if not found in wslusersprofiles, then check his verified email
-	if( ! $user_id && ! empty( $hybridauth_user_profile->emailVerified ) )
-	{
-		// check if the verified email exist in wp_users
-		$user_id = (int) wsl_wp_email_exists( $hybridauth_user_profile->emailVerified );
-
-		// the user exists in Wordpress
-		$wordpress_user_id = $user_id;
-
-		// check if the verified email exist in wslusersprofiles
-		if( ! $user_id )
-		{
-			$user_id = (int) wsl_get_stored_hybridauth_user_id_by_email_verified( $hybridauth_user_profile->emailVerified );
-		}
-	}
-
-	/* 4 Deletegate detection of user id to custom filters hooks */
-
+	
 	/* 6. returns user data */
 
 	return array(

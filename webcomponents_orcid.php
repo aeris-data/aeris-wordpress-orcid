@@ -35,10 +35,7 @@ function aeris_orcid_import_components() {
 
 			echo '<link rel="import" href="'.AERISWEBCOMP_DIR_URL.'/bower_components/paper-input/paper-input.html" />';
 			echo '<link rel="stylesheet" href="https://rawgit.com/aeris-data/aeris-metadata-components-vjs/develop/src/style/aeris-metadata-shared-style.css">';
-			
-			echo '<script type="text/javascript" component="aeris-data/aeris-commons-components-vjs@latest" src="https://rawgit.com/aeris-data/aeris-component-loader/master/aerisComponentLoader.js" ></script>';
-			
-			
+			echo '<script type="text/javascript" src="'.get_template_directory_uri().'/js/aeris-commons-components-vjs_0.1.4.js" ></script>';
 		
 		
 	}
