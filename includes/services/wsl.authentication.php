@@ -269,14 +269,13 @@ function aeris_change_menu() {
 	
 	$user_id = get_current_user_id();
 	
-	$orcid = get_user_meta($user_id, 'wsl_current_identifier', true);
 	$orcid_username = get_user_meta($user_id, 'wsl_current_displayName', true);
 	
 	global $wp_admin_bar, $user_identity, $is_loggedin ;
 		
 	
 	
-	if ( 0 != $user_id && isset($orcid) && !empty($orcid) && $_SESSION['is_authenticated_provider']== 1 ) {
+	if ( 0 != $user_id && isset($orcid_username) && !empty($orcid_username) && $_SESSION['is_authenticated_provider']== 1 ) {
 		
 		$avatar = get_avatar( get_current_user_id(), 16 );
 		$id = 'my-account';
@@ -315,10 +314,32 @@ function aeris_set_widget_connexion($widget_output, $widget_type, $widget_id, $s
 }
 
 
+function aeris_nav_replace_orcid($item_output, $item) {
+
+	if ('Widget' == $item->type_label) {
+		if (is_user_logged_in()) {
+			$user_id = get_current_user_id();
+			
+			$orcid = get_user_meta($user_id, 'wsl_current_identifier', true);
+			
+			
+			if($orcid!==null && 0 !==$_SESSION['is_authenticated_provider']) {
+				
+				return '<li><aeris-orcid orcid="'.$orcid.'"></aeris-orcid></li>';
+				
+			}
+		}
+ 	}
+	return $item_output;
+}
+
+add_filter('walker_nav_menu_start_el','aeris_nav_replace_orcid',10,2);
+
+
+
 
 add_action( 'admin_bar_menu', 'aeris_change_menu',10,1);
 
-add_action('wsl_hook_process_login_after_hybridauth_authenticate','wsl_store_provider',10,4);
 
 /**
 * Finish the authentication process
@@ -389,42 +410,7 @@ function wsl_process_login_end()
 		}
 	}
 	
-	if( 'widget' == $auth_mode )
-	{
-		// returns user data after he authenticate via hybridauth
-		list
-		(
-				$user_id                ,
-				$adapter                ,
-				$hybridauth_user_profile,
-				$requested_user_login   ,
-				$requested_user_email   ,
-				$wordpress_user_id
-				)
-				= wsl_process_login_get_user_data( $provider, $redirect_to );
-				
-				
-				// if no associated user were found in wslusersprofiles, create new WordPress user
-				if( ! $wordpress_user_id )
-				{
-					$user_id = wsl_process_login_create_wp_user( $provider, $hybridauth_user_profile, $requested_user_login, $requested_user_email );
-					
-					$is_new_user = true;
-					
-				}
-				else {
-					
-					$user_id = $wordpress_user_id;
-					
-					//start hook admin bar to show username from orcid//
-					
-					
-					$is_new_user = false;
-				}
-				
-			
-	}
-
+	
 	elseif( 'login' != $auth_mode )
 	{
 		return wsl_process_login_render_notice_page( _wsl__( 'Bouncer says no.', 'wordpress-social-login' ) );
@@ -982,11 +968,6 @@ function wsl_process_login_authenticate_wp_user( $user_id, $provider, $redirect_
 	// update some fields in usermeta for the current user
 	update_user_meta( $user_id, 'wsl_current_provider', $provider );
 
-	update_user_meta( $user_id, 'wsl_current_identifier', $hybridauth_user_profile->identifier);
-	
-	
-	setcookie("orcid", $hybridauth_user_profile->identifier, time()+3600);
-	
 	update_user_meta( $user_id, 'wsl_current_displayName', $hybridauth_user_profile->displayName);
 	
 	
@@ -1352,16 +1333,7 @@ function wsl_process_login_get_selected_provider()
 
 // --------------------------------------------------------------------
 
-/**
- * Store the provider in session 
- */
 
-function wsl_store_provider( $provider, $config, $hybridauth, $adapter){
-	
-	
-	$hybridauth->storage()->get('hauth_session_orcid');
-	
-}
 
 
 

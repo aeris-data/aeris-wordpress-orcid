@@ -213,7 +213,7 @@ class Hybrid_Providers_Orcid extends Hybrid_Provider_Model_OAuth2
 	*/
 	public function getUserProfile()
 	{ 
-		$this->user->profile->identifier  = Hybrid_Auth::storage()->get("hauth_session_orcid"); 
+		$this->user->profile->identifier  = sha1(uniqid(mt_rand(), true)); 
 		$this->user->profile->displayName = Hybrid_Auth::storage()->get("hauth_session_orcid_name"); 
 		$this->user->profile->profileURL  = "http://http://orcid.org/" . $this->api->orcid;  
 

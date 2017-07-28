@@ -457,9 +457,11 @@ function wsl_process_login_new_users_gateway( $provider, $redirect_to, $hybridau
 	<body>
 		<div id="login">
 			<div id="login-panel">
+				<?php if(isset($hybridauth_user_avatar)):?>
 				<div id="avatar">
 					<img src="<?php echo $hybridauth_user_avatar; ?>">
 				</div>
+				<?php endif;?>
 
 				<div id="welcome">
 					<img id="idp-icon" src="<?php echo $assets_base_url . strtolower($provider); ?>.png" >
