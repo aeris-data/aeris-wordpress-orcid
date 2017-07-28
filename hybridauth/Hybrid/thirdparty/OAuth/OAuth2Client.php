@@ -55,13 +55,14 @@ class OAuth2Client
 		$params = array(
 			"client_id"     => $this->client_id,
 			"redirect_uri"  => $this->redirect_uri,
-			"response_type" => "code"
+			"response_type" => "code",
+			"state" => null
 		);
-
+	
 		if( count($extras) )
 			foreach( $extras as $k=>$v )
 				$params[$k] = $v;
-
+			
 		return $this->authorize_url . "?" . http_build_query($params, '', '&');
 	}
 

@@ -257,9 +257,12 @@ require_once( WORDPRESS_SOCIAL_LOGIN_ABS_PATH . 'includes/widgets/wsl.loading.sc
 
 #Widget
 include_once plugin_dir_path(__FILE__).'/webcomponents_orcid.php';
+include_once plugin_dir_path(__FILE__).'/aeris-widget-orcid.php';
+require_once plugin_dir_path(__FILE__).'/src/class.Widget_Output_Filters.php';
 
-
+Widget_Output_Filters::get_instance();
 # WSL Admin interfaces
+
 if( is_admin() && ( !defined( 'DOING_AJAX' ) || !DOING_AJAX ) )
 {
 	require_once( WORDPRESS_SOCIAL_LOGIN_ABS_PATH . 'includes/admin/wsl.admin.ui.php'            ); // The entry point to WSL Admin interfaces
@@ -268,4 +271,12 @@ if( is_admin() && ( !defined( 'DOING_AJAX' ) || !DOING_AJAX ) )
 // --------------------------------------------------------------------
 
 
+# Widget Orcid
+add_action( 'widgets_init', 'myplugin_register_widgets' );
+
+function myplugin_register_widgets() {
+	
+	register_widget( 'OrcidWidget' );
+	
+}
 

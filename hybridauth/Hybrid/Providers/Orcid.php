@@ -37,8 +37,11 @@ class Hybrid_Providers_Orcid extends Hybrid_Provider_Model_OAuth2
 	*/
 	function loginBegin()
 	{
+		$state = sha1(uniqid(mt_rand(), true));
+		$_SESSION['state_param'] = $state;
+		
 		// redirect the user to the provider authentication url
-		Hybrid_Auth::redirect( $this->api->authorizeUrl( array( "scope" => $this->api->scope, "response_type" => "code"  ) ) ); 
+		Hybrid_Auth::redirect( $this->api->authorizeUrl( array( "scope" => $this->api->scope, "response_type" => "code", "state" => $state  ) ) ); 
 		//call access token //
 
 	}
@@ -54,7 +57,15 @@ class Hybrid_Providers_Orcid extends Hybrid_Provider_Model_OAuth2
 	function loginFinish()
 	{
 		$error = (array_key_exists('error',$_REQUEST))?$_REQUEST['error']:"";
-
+		
+		//secure csfr//
+		
+		$invalid_state = $_REQUEST['state'] !== $_SESSION['state_param'] ? true : false;
+		
+		if($invalid_state) {
+			
+			throw new Exception( "Authentication failed, wrong state! {$this->providerId} returned an error: ",5 );
+		}
 		// check for errors
 		if ( $error ) { 
 			throw new Exception( "Authentication failed! {$this->providerId} returned an error: " . htmlentities( $error ), 5 );

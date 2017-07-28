@@ -78,6 +78,7 @@ if( !defined( 'ABSPATH' ) ) exit;
 */
 function wsl_process_login()
 {
+	
 	// > check for wsl actions
 	$action = isset( $_REQUEST['action'] ) ? $_REQUEST['action'] : null;
 
@@ -144,6 +145,8 @@ add_action( 'init', 'wsl_process_login' );
 
 $is_loggedin;
 
+add_filter('widget_output', 'aeris_set_widget_connexion', 10, 4 );
+
 /**
 * Start the first part of authentication
 *
@@ -155,6 +158,7 @@ $is_loggedin;
 */
 function wsl_process_login_begin()
 {
+	
 	// HOOKABLE:
 	do_action( "wsl_process_login_begin_start" );
 
@@ -244,7 +248,10 @@ function wsl_process_login_begin()
 	$auth_mode = wsl_process_login_get_auth_mode();
 
 	$redirect_to = isset( $_REQUEST[ 'redirect_to' ] ) ? $_REQUEST[ 'redirect_to' ] : home_url();
-
+	
+	$state_param = $_REQUEST[ 'state' ];
+	
+	
 	// build the authenticateD, which will make wsl_process_login() fire the next step wsl_process_login_end()
 	$authenticated_url = site_url( 'wp-login.php', 'login_post' ) . ( strpos( site_url( 'wp-login.php', 'login_post' ), '?' ) ? '&' : '?' ) . "action=wordpress_social_authenticated&provider=" . $provider . '&mode=' . $auth_mode;
 
@@ -265,10 +272,11 @@ function aeris_change_menu() {
 	$orcid = get_user_meta($user_id, 'wsl_current_identifier', true);
 	$orcid_username = get_user_meta($user_id, 'wsl_current_displayName', true);
 	
-	global $wp_admin_bar, $user_identity, $is_loggedin;
+	global $wp_admin_bar, $user_identity, $is_loggedin ;
 		
 	
-	if ( 0 != $user_id && isset($orcid) && !empty($orcid) && $_SESSION['is_authenticated_provider'] == 1 && $orcid !==null) {
+	
+	if ( 0 != $user_id && isset($orcid) && !empty($orcid) && $_SESSION['is_authenticated_provider']== 1 ) {
 		
 		$avatar = get_avatar( get_current_user_id(), 16 );
 		$id = 'my-account';
@@ -281,35 +289,32 @@ function aeris_change_menu() {
 
 
 /**
- * Add a login link to the members navigation
+ * set orcid for widget instance
  */
-function aeris_set_menu_connexion( $items, $args )
+function aeris_set_widget_connexion($widget_output, $widget_type, $widget_id, $sidebar_id )
 {
-	if($args->theme_location == 'header-menu')
-	{
 		if(is_user_logged_in())
 		{
+ 			$user_id = get_current_user_id();
+			
+ 			$orcid = get_user_meta($user_id, 'wsl_current_identifier', true);
 			
 			
-			$user_id = get_current_user_id();
-			
-			$orcid = get_user_meta($user_id, 'wsl_current_identifier', true);
-			
-			if($orcid!==null && 0 !== $_SESSION['is_authenticated_provider']) {
+ 			if($orcid!==null && 0 !==$_SESSION['is_authenticated_provider']) {
 				
-				$items .= '<li>fghfghffgfg<aeris-orcid-connexion></aeris-orcid-connexion></li>';
 				
-			}
+ 				if ( 'orcid_widget' == $widget_type ) {
+					
+ 					$widget_output =  '<aeris-orcid orcid="'.$orcid.'"></aeris-orcid>';
+ 				}
+				
+ 			}
 			
-		} else {
-			$actual_link = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-			
-			$items .= '<li><aeris-orcid-connexion></aeris-orcid-connexion></li>';
-		}
-	}
-	
-	return $items;
+ 		} 	
+	return $widget_output;
 }
+
+
 
 add_action( 'admin_bar_menu', 'aeris_change_menu',10,1);
 
@@ -327,7 +332,6 @@ add_action('wsl_hook_process_login_after_hybridauth_authenticate','wsl_store_pro
 function wsl_process_login_end()
 {
 	
-
 	// HOOKABLE: set a custom Redirect URL
 	$redirect_to = wsl_process_login_get_redirect_to();
 
@@ -443,7 +447,7 @@ function wsl_process_login_end()
 		)
 		= wsl_process_login_get_user_data( $provider, $redirect_to );
 
-
+		
 		// if no associated user were found in wslusersprofiles, create new WordPress user
 		if( ! $wordpress_user_id )
 		{
@@ -483,6 +487,8 @@ function wsl_process_login_end()
 		
 		// store user hybridauth profile (wslusersprofiles), contacts (wsluserscontacts) and buddypress mapping
 		wsl_process_login_update_wsl_user_data( $is_new_user, $user_id, $provider, $adapter, $hybridauth_user_profile, $wp_user );
+		
+		
 		
 		// finally create a wordpress session for the user
 		wsl_process_login_authenticate_wp_user( $user_id, $provider, $redirect_to, $adapter, $hybridauth_user_profile, $wp_user, $orcid_name, $orcid_id );
@@ -956,7 +962,7 @@ function wsl_process_login_update_wsl_user_data( $is_new_user, $user_id, $provid
 	// > wsl will only import the contacts list once per user per provider.
 	wsl_store_hybridauth_user_contacts( $user_id, $provider, $adapter );
 }
-add_filter( 'wp_nav_menu_items', 'aeris_set_menu_connexion', 10, 2);
+
 
 // --------------------------------------------------------------------
 
@@ -968,6 +974,8 @@ add_filter( 'wp_nav_menu_items', 'aeris_set_menu_connexion', 10, 2);
 */
 function wsl_process_login_authenticate_wp_user( $user_id, $provider, $redirect_to, $adapter, $hybridauth_user_profile, $wp_user, $orcid_name, $orcid_id )
 {
+	
+	
 	// HOOKABLE:
 	do_action( "wsl_process_login_authenticate_wp_user_start", $user_id, $provider, $redirect_to, $adapter, $hybridauth_user_profile, $wp_user );
 
@@ -1052,6 +1060,9 @@ function wsl_process_login_authenticate_wp_user( $user_id, $provider, $redirect_
 	// wsl_display_dev_mode_debugging_area(); die(); // ! keep this line commented unless you know what you are doing :)
 
 	// That's it. We done.
+	
+	
+	
 	$_SESSION['is_authenticated_provider'] = 1;
 	wp_safe_redirect( $redirect_to );
 	
