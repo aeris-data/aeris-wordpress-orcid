@@ -315,9 +315,14 @@ function aeris_set_widget_connexion($widget_output, $widget_type, $widget_id, $s
 
 
 function aeris_nav_replace_orcid($item_output, $item) {
-
-	if ('Widget' == $item->type_label) {
+	
+	$pattern = "/orcid_widget-\d/";
+	
+	
+	if ('Widget' == $item->type_label && preg_match($pattern,$item->xfn)) {
+		
 		if (is_user_logged_in()) {
+			
 			$user_id = get_current_user_id();
 			
 			$orcid = get_user_meta($user_id, 'wsl_current_identifier', true);
@@ -325,7 +330,7 @@ function aeris_nav_replace_orcid($item_output, $item) {
 			
 			if($orcid!==null && 0 !==$_SESSION['is_authenticated_provider']) {
 				
-				return '<li><aeris-orcid orcid="'.$orcid.'"></aeris-orcid></li>';
+				return '<aeris-orcid orcid="'.$orcid.'"></aeris-orcid>';
 				
 			}
 		}

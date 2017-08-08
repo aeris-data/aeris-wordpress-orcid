@@ -11,7 +11,16 @@ class OrcidWidget extends WP_Widget {
     
     
     function widget($args, $instance) {
-        echo '<aeris-orcid></aeris-orcid>';
+    	
+    	extract( $args );
+    	
+    	
+    	$title = apply_filters('widget_title', $instance['title']);
+    	echo $before_widget;
+    	if ( $title == "orcid widget" ) {
+    		echo '<aeris-orcid></aeris-orcid>';
+    	}
+    	echo $after_widget;
     }
 
     function update( $new_instance, $old_instance ) {
@@ -21,6 +30,7 @@ class OrcidWidget extends WP_Widget {
     }
 
     function form( $instance ) {
+    	
         $title = isset( $instance['title'] ) ? $instance['title'] : '';
         $nav_menu = isset( $instance['nav_menu'] ) ? $instance['nav_menu'] : '';
 

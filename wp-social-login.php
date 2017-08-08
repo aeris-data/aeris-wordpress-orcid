@@ -260,6 +260,18 @@ include_once plugin_dir_path(__FILE__).'/webcomponents_orcid.php';
 include_once plugin_dir_path(__FILE__).'/aeris-widget-orcid.php';
 require_once plugin_dir_path(__FILE__).'/src/class.Widget_Output_Filters.php';
 
+#Widget in menu
+/**
+ * Include main plugin class
+ */
+include_once plugin_dir_path(__FILE__). '/src/class-widget-aeris-menu.php';
+
+/**
+ * Include walker class to override menu walker
+ */
+include_once plugin_dir_path(__FILE__). '/src/class-widget-aeris-menu-walker.php';
+
+
 Widget_Output_Filters::get_instance();
 # WSL Admin interfaces
 
@@ -272,11 +284,38 @@ if( is_admin() && ( !defined( 'DOING_AJAX' ) || !DOING_AJAX ) )
 
 
 # Widget Orcid
-add_action( 'widgets_init', 'myplugin_register_widgets' );
+add_action( 'widgets_init', 'aeris_wordpress_orcid' );
 
-function myplugin_register_widgets() {
+function aeris_wordpress_orcid() {
 	
 	register_widget( 'OrcidWidget' );
 	
 }
 
+/**
+ * Filters the prefix used in class/id attributes in html display.
+ *
+ * @since 0.1.0
+ *
+ * @param string $default_prefix The default prefix: 'aeris_orcid'
+ */
+$attr_prefix = apply_filters( 'aeris_widget_menu_prefix', 'aeris_widget_menu' );
+
+/**
+ *
+ * A string prefix for internal names and ids
+ */
+define( 'AERIS_WIDGET_MENU_PREFIX', $attr_prefix );
+
+
+/**
+ * Plugin's url path
+ */
+define( 'AERIS_WIDGET_MENU_URL', plugin_dir_url( __FILE__ ) );
+
+
+$aeris_widget_menu = new AERIS_WIDGET_MENU();
+$aeris_widget_menu->init();
+
+$aeris_widget_menu_walker = new AERIS_WIDGET_MENU_Walker();
+$aeris_widget_menu_walker->init();
