@@ -10,15 +10,18 @@ define('AERISWEBCOMP_DIR_URL', plugins_url('', AERISWEBCOMP_BASENAME));
 set_time_limit(0);
 
 
-if(is_plugin_active(AERISWEBCOMP_BASENAME)) {
-	add_action('wp_enqueue_scripts','aeris_orcid_load_polyfill');
+function aeris_load_scripts_orcid() {
 	
-	add_action('wp_enqueue_style','aeris_orcid_AerisWebComp_color_style');
-	add_action('wp_head', 'aeris_orcid_import_components');
+	if(is_plugin_active(AERISWEBCOMP_BASENAME)) {
+		add_action('wp_enqueue_scripts','aeris_orcid_load_polyfill');
+		
+		add_action('wp_enqueue_style','aeris_orcid_AerisWebComp_color_style');
+		add_action('wp_head', 'aeris_orcid_import_components');
+	}
+	
 }
 
-
-
+add_action( 'init', 'aeris_load_scripts_orcid' );
 
 //Load webcomponents-js polyfill
 function aeris_orcid_load_polyfill() {
