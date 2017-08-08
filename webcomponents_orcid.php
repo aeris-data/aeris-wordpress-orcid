@@ -12,12 +12,11 @@ set_time_limit(0);
 
 function aeris_load_scripts_orcid() {
 	
-	if(is_plugin_active(AERISWEBCOMP_BASENAME)) {
 		add_action('wp_enqueue_scripts','aeris_orcid_load_polyfill');
 		
 		add_action('wp_enqueue_style','aeris_orcid_AerisWebComp_color_style');
 		add_action('wp_head', 'aeris_orcid_import_components');
-	}
+	
 	
 }
 
