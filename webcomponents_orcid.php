@@ -5,7 +5,7 @@
 
 // Path
 define('AERISWEBCOMP_BASENAME', plugin_dir_path(dirname(__FILE__)).'/webcomponents2');
-define('AERISWEBCOMP_DIR_URL', plugins_url('', AERISWEBCOMP_BASENAME));
+define('AERISWEBCOMP_DIR_URL', plugins_url('webcomponents2', AERISWEBCOMP_BASENAME));
 
 set_time_limit(0);
 

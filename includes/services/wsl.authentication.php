@@ -294,16 +294,17 @@ function aeris_set_widget_connexion($widget_output, $widget_type, $widget_id, $s
 {
 		if(is_user_logged_in())
 		{
- 			$user_id = get_current_user_id();
+			$user_id = get_current_user_id();
 			
  			$orcid = get_user_meta($user_id, 'wsl_current_identifier', true);
 			
 			
- 			if($orcid!==null && 0 !==$_SESSION['is_authenticated_provider']) {
+ 			if($orcid!==null && !empty($_SESSION['is_authenticated_provider'])) {
 				
 				
  				if ( 'orcid_widget' == $widget_type ) {
 					
+ 					
  					$widget_output =  '<aeris-orcid orcid="'.$orcid.'"></aeris-orcid>';
  				}
 				
@@ -328,7 +329,7 @@ function aeris_nav_replace_orcid($item_output, $item) {
 			$orcid = get_user_meta($user_id, 'wsl_current_identifier', true);
 			
 			
-			if($orcid!==null && 0 !==$_SESSION['is_authenticated_provider']) {
+			if($orcid!==null && !empty($_SESSION['is_authenticated_provider'])) {
 				
 				return '<aeris-orcid orcid="'.$orcid.'"></aeris-orcid>';
 				
@@ -360,7 +361,7 @@ function wsl_process_login_end()
 	
 	// HOOKABLE: set a custom Redirect URL
 	$redirect_to = wsl_process_login_get_redirect_to();
-
+	
 	// HOOKABLE: selected provider name
 	$provider = wsl_process_login_get_selected_provider();
 	
