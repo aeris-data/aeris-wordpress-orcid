@@ -17,7 +17,9 @@ class OrcidWidget extends WP_Widget {
     	
     	$title = apply_filters('widget_title', $instance['title']);
     	echo $before_widget;
-    	if ( $title == "orcid widget" ) {
+    	
+    	if ( $args["id"] == "aeris_widget_menu" ) {
+    		
     		echo '<aeris-orcid></aeris-orcid>';
     	}
     	echo $after_widget;
