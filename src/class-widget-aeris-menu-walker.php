@@ -1,7 +1,7 @@
 <?php
 if ( ! class_exists( 'AERIS_WIDGET_MENU_Walker' ) ) {
 
-	class AERIS_WIDGET_MENU_Walker {
+	class AERIS_WIDGET_MENU_Walker extends Walker_Nav_Menu{
 
 		public function init() {
 			// filter the nav menu item output for rendering widgets

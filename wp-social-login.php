@@ -232,6 +232,8 @@ function _wsl__( $text, $domain )
 	return __( $text, $domain );
 }
 
+
+
 // --------------------------------------------------------------------
 
 /* includes */
@@ -241,26 +243,6 @@ require_once( WORDPRESS_SOCIAL_LOGIN_ABS_PATH . 'includes/settings/wsl.providers
 require_once( WORDPRESS_SOCIAL_LOGIN_ABS_PATH . 'includes/settings/wsl.database.php'             ); // Install/Uninstall WSL database tables
 require_once( WORDPRESS_SOCIAL_LOGIN_ABS_PATH . 'includes/settings/wsl.initialization.php'       ); // Check WSL requirements and register WSL settings
 require_once( WORDPRESS_SOCIAL_LOGIN_ABS_PATH . 'includes/settings/wsl.compatibilities.php'      ); // Check and upgrade WSL database/settings (for older versions)
-
-# Services & Utilities
-require_once( WORDPRESS_SOCIAL_LOGIN_ABS_PATH . 'includes/services/wsl.authentication.php'       ); // Authenticate users via social networks. <- that's the most important script
-require_once( WORDPRESS_SOCIAL_LOGIN_ABS_PATH . 'includes/services/wsl.mail.notification.php'    ); // Emails and notifications
-require_once( WORDPRESS_SOCIAL_LOGIN_ABS_PATH . 'includes/services/wsl.user.avatar.php'          ); // Display users avatar
-require_once( WORDPRESS_SOCIAL_LOGIN_ABS_PATH . 'includes/services/wsl.user.data.php'            ); // User data functions (database related)
-require_once( WORDPRESS_SOCIAL_LOGIN_ABS_PATH . 'includes/services/wsl.utilities.php'            ); // Unclassified functions & utilities
-require_once( WORDPRESS_SOCIAL_LOGIN_ABS_PATH . 'includes/services/wsl.watchdog.php'             ); // WSL logging agent
-
-# WSL Widgets & Front-end interfaces
-require_once( WORDPRESS_SOCIAL_LOGIN_ABS_PATH . 'includes/widgets/wsl.auth.widgets.php'          ); // Authentication widget generators (where WSL widget/icons are displayed)
-require_once( WORDPRESS_SOCIAL_LOGIN_ABS_PATH . 'includes/widgets/wsl.users.gateway.php'         ); // Accounts linking + Profile Completion
-require_once( WORDPRESS_SOCIAL_LOGIN_ABS_PATH . 'includes/widgets/wsl.error.pages.php'           ); // Generate WSL notices end errors pages
-require_once( WORDPRESS_SOCIAL_LOGIN_ABS_PATH . 'includes/widgets/wsl.loading.screens.php'       ); // Generate WSL loading screens
-
-#Widget
-include_once plugin_dir_path(__FILE__).'/webcomponents_orcid.php';
-include_once plugin_dir_path(__FILE__).'/aeris-widget-orcid.php';
-require_once plugin_dir_path(__FILE__).'/src/class.Widget_Output_Filters.php';
-
 #Widget in menu
 /**
  * Include main plugin class
@@ -272,26 +254,6 @@ include_once plugin_dir_path(__FILE__). '/src/class-widget-aeris-menu.php';
  */
 include_once plugin_dir_path(__FILE__). '/src/class-widget-aeris-menu-walker.php';
 
-
-Widget_Output_Filters::get_instance();
-# WSL Admin interfaces
-
-if( is_admin() && ( !defined( 'DOING_AJAX' ) || !DOING_AJAX ) )
-{
-	require_once( WORDPRESS_SOCIAL_LOGIN_ABS_PATH . 'includes/admin/wsl.admin.ui.php'            ); // The entry point to WSL Admin interfaces
-}
-
-// --------------------------------------------------------------------
-
-
-# Widget Orcid
-add_action( 'widgets_init', 'aeris_wordpress_orcid' );
-
-function aeris_wordpress_orcid() {
-	
-	register_widget( 'OrcidWidget' );
-	
-}
 
 /**
  * Filters the prefix used in class/id attributes in html display.
@@ -320,3 +282,48 @@ $aeris_widget_menu->init();
 
 $aeris_widget_menu_walker = new AERIS_WIDGET_MENU_Walker();
 $aeris_widget_menu_walker->init();
+
+
+# Services & Utilities
+require_once( WORDPRESS_SOCIAL_LOGIN_ABS_PATH . 'includes/services/wsl.authentication.php'       ); // Authenticate users via social networks. <- that's the most important script
+require_once( WORDPRESS_SOCIAL_LOGIN_ABS_PATH . 'includes/services/wsl.mail.notification.php'    ); // Emails and notifications
+require_once( WORDPRESS_SOCIAL_LOGIN_ABS_PATH . 'includes/services/wsl.user.avatar.php'          ); // Display users avatar
+require_once( WORDPRESS_SOCIAL_LOGIN_ABS_PATH . 'includes/services/wsl.user.data.php'            ); // User data functions (database related)
+require_once( WORDPRESS_SOCIAL_LOGIN_ABS_PATH . 'includes/services/wsl.utilities.php'            ); // Unclassified functions & utilities
+require_once( WORDPRESS_SOCIAL_LOGIN_ABS_PATH . 'includes/services/wsl.watchdog.php'             ); // WSL logging agent
+
+# WSL Widgets & Front-end interfaces
+require_once( WORDPRESS_SOCIAL_LOGIN_ABS_PATH . 'includes/widgets/wsl.auth.widgets.php'          ); // Authentication widget generators (where WSL widget/icons are displayed)
+require_once( WORDPRESS_SOCIAL_LOGIN_ABS_PATH . 'includes/widgets/wsl.users.gateway.php'         ); // Accounts linking + Profile Completion
+require_once( WORDPRESS_SOCIAL_LOGIN_ABS_PATH . 'includes/widgets/wsl.error.pages.php'           ); // Generate WSL notices end errors pages
+require_once( WORDPRESS_SOCIAL_LOGIN_ABS_PATH . 'includes/widgets/wsl.loading.screens.php'       ); // Generate WSL loading screens
+
+#Widget
+include_once plugin_dir_path(__FILE__).'/webcomponents_orcid.php';
+include_once plugin_dir_path(__FILE__).'/aeris-widget-orcid.php';
+require_once plugin_dir_path(__FILE__).'/src/class.Widget_Output_Filters.php';
+
+
+
+
+Widget_Output_Filters::get_instance();
+# WSL Admin interfaces
+
+if( is_admin() && ( !defined( 'DOING_AJAX' ) || !DOING_AJAX ) )
+{
+	require_once( WORDPRESS_SOCIAL_LOGIN_ABS_PATH . 'includes/admin/wsl.admin.ui.php'            ); // The entry point to WSL Admin interfaces
+}
+
+// --------------------------------------------------------------------
+
+
+# Widget Orcid
+add_action( 'widgets_init', 'aeris_wordpress_orcid' );
+
+function aeris_wordpress_orcid() {
+	
+	register_widget( 'OrcidWidget' );
+	
+}
+
+

@@ -263,7 +263,9 @@ function wsl_process_login_begin()
 
 
 
-
+/**
+ * this for setting up the name linked to orcid in the admin menu
+ */
 function aeris_change_menu() {
 	
 	
@@ -284,6 +286,9 @@ function aeris_change_menu() {
 	}
 	
 }
+
+
+add_action( 'admin_bar_menu', 'aeris_change_menu',10,1);
 
 
 
@@ -342,9 +347,92 @@ function aeris_nav_replace_orcid($item_output, $item) {
 add_filter('walker_nav_menu_start_el','aeris_nav_replace_orcid',10,2);
 
 
+function my_register_menu_metabox() {
+	$custom_param = array( 0 => 'This param will be passed to my_render_menu_metabox' );
+	
+	add_meta_box( 'my-menu-test-metabox', 'Orcid Connexion', 'my_render_menu_metabox', 'nav-menus', 'side', 'default', $custom_param );
+}
+add_action( 'admin_head-nav-menus.php', 'my_register_menu_metabox' );
 
 
-add_action( 'admin_bar_menu', 'aeris_change_menu',10,1);
+/**
+ * Displays a menu metabox
+ *
+ * @param string $object Not used.
+ * @param array $args Parameters and arguments. If you passed custom params to add_meta_box(),
+ * they will be in $args['args']
+ */
+function my_render_menu_metabox( $object, $args ) {
+	
+	global $nav_menu_selected_id;
+	$url_auth = home_url().'/wp-login.php?action=wordpress_social_authenticate&mode=login&provider=Orcid&redirect_to='.home_url();
+	
+	$label_connexion = 'Orcid Connexion';
+	
+	
+	// Create an array of objects that imitate Post objects
+	$my_items = array(
+			(object) array(
+					'ID' => 1,
+					'db_id' => 0,
+					'menu_item_parent' => 0,
+					'object_id' => 1,
+					'post_parent' => 0,
+					'type' => 'custom',
+					'object' => 'orcid-connexion',
+					'type_label' => $label_connexion,
+					'title' => 'Connexion',
+					'url' => $url_auth,
+					'target' => '',
+					'attr_title' => '',
+					'description' => '',
+					'classes' => array('orcid-login-link'),
+					'xfn' => '',
+			),
+		
+	);
+	$db_fields = false;
+	// If your links will be hieararchical, adjust the $db_fields array bellow
+	if ( false ) {
+		$db_fields = array( 'parent' => 'parent', 'id' => 'post_parent' );
+	}
+	$walker = new Walker_Nav_Menu_Checklist( $db_fields );
+	$removed_args = array(
+			'action',
+			'customlink-tab',
+			'edit-menu-item',
+			'menu-item',
+			'page-tab',
+			'_wpnonce',
+	); ?>
+	<div id="my-plugin-div">
+		<div id="tabs-panel-my-plugin-all" class="tabs-panel tabs-panel-active">
+		<ul id="my-plugin-checklist-pop" class="categorychecklist form-no-clear" >
+			<?php echo walk_nav_menu_tree( array_map( 'wp_setup_nav_menu_item', $my_items ), 0, (object) array( 'walker' => $walker ) ); ?>
+		</ul>
+
+		<p class="button-controls">
+			<span class="list-controls">
+				<a href="<?php
+					echo esc_url(add_query_arg(
+						array(
+							'my-plugin-all' => 'all',
+							'selectall' => 1,
+						),
+						remove_query_arg( $removed_args )
+					));
+				?>#my-menu-test-metabox" class="select-all"><?php _e( 'Select All' ); ?></a>
+			</span>
+
+			<span class="add-to-menu">
+				<input type="submit"<?php wp_nav_menu_disabled_check( $nav_menu_selected_id ); ?> class="button-secondary submit-add-to-menu right" value="<?php esc_attr_e( 'Add to Menu' ); ?>" name="add-my-plugin-menu-item" id="submit-my-plugin-div" />
+				<span class="spinner"></span>
+			</span>
+		</p>
+	</div>
+	<?php
+}
+
 
 
 /**
