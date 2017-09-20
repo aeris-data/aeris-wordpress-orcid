@@ -304,18 +304,22 @@ add_action( 'wordpress_social_login', 'wsl_action_wordpress_social_login' );
 */
 function wsl_shortcode_wordpress_social_login( $args = array(), $content = null )
 {
+	
 	$restrict_content = isset( $args['restrict_content'] ) && $args['restrict_content'] ? true : false;
 
 	if( 'wp_user_logged_in' == $restrict_content && is_user_logged_in() )
 	{
+		
 		return do_shortcode( $content );
 	}
 
 	if( 'wsl_user_logged_in' == $restrict_content && wsl_get_stored_hybridauth_user_profiles_by_user_id( get_current_user_id() ) )
 	{
+		
 		return do_shortcode( $content );
 	}
-
+	
+	
 	return wsl_render_auth_widget( $args );
 }
 

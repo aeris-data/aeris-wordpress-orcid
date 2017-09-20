@@ -44,13 +44,13 @@ class WSL_Test_Widget extends WP_UnitTestCase
 	function test_has_content()
 	{
 		$test = wsl_render_auth_widget();
-
+		
+		
 		$this->assertTrue( (bool) $test );
-
 		$this->assertEquals( 1, substr_count( $test, '"wp-social-login-widget"'          ) );
 		$this->assertEquals( 1, substr_count( $test, '"wp-social-login-connect-with"'    ) );
 		$this->assertEquals( 1, substr_count( $test, '"wp-social-login-provider-list"'   ) );
-		$this->assertEquals( 3, substr_count( $test, '"wp-social-login-provider '        ) );
+		$this->assertEquals( 3, substr_count( $test, 'wp-social-login-provider '        ) );
 		$this->assertEquals( 1, substr_count( $test, ' wp-social-login-provider-google'  ) );
 		$this->assertEquals( 1, substr_count( $test, '"wp-social-login-widget-clearing"' ) );
 	}
