@@ -299,6 +299,8 @@ function aeris_set_widget_connexion($widget_output, $widget_type, $widget_id, $s
 {
 		if(is_user_logged_in())
 		{
+			
+			
 			$user_id = get_current_user_id();
 			
  			$orcid = get_user_meta($user_id, 'wsl_current_identifier', true);
@@ -322,10 +324,16 @@ function aeris_set_widget_connexion($widget_output, $widget_type, $widget_id, $s
 
 function aeris_nav_replace_orcid($item_output, $item) {
 	
-	$pattern = "/orcid_widget-\d/";
+	$pattern_orcid = "/orcid_widget-\d/";
+	$link_login_class = "orcid-login-link";
 	
 	
-	if ('Widget' == $item->type_label && preg_match($pattern,$item->xfn)) {
+	if($link_login_class == $item->class){
+		
+		return '';
+	}
+	
+	if ('Widget' == $item->type_label && preg_match($pattern_orcid,$item->xfn)) {
 		
 		if (is_user_logged_in()) {
 			
@@ -407,7 +415,7 @@ function my_render_menu_metabox( $object, $args ) {
 	); ?>
 	<div id="my-plugin-div">
 		<div id="tabs-panel-my-plugin-all" class="tabs-panel tabs-panel-active">
-		<ul id="my-plugin-checklist-pop" class="categorychecklist form-no-clear" >
+		<ul id="my-plugin-checklist-pop" class="categorychecklist form-no-clear">
 			<?php echo walk_nav_menu_tree( array_map( 'wp_setup_nav_menu_item', $my_items ), 0, (object) array( 'walker' => $walker ) ); ?>
 		</ul>
 
