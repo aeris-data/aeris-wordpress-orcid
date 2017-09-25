@@ -333,6 +333,7 @@ function aeris_nav_replace_orcid($item_output, $item) {
 		return '';
 	}
 	
+	
 	if ('Widget' == $item->type_label && preg_match($pattern_orcid,$item->xfn)) {
 		
 		if (is_user_logged_in()) {
@@ -343,7 +344,6 @@ function aeris_nav_replace_orcid($item_output, $item) {
 			
 			
 			if($orcid!==null && !empty($_SESSION['is_authenticated_provider'])) {
-				
 				return '<aeris-orcid orcid="'.$orcid.'"></aeris-orcid>';
 				
 			}
@@ -576,7 +576,8 @@ function wsl_process_login_end()
 		// store user hybridauth profile (wslusersprofiles), contacts (wsluserscontacts) and buddypress mapping
 		wsl_process_login_update_wsl_user_data( $is_new_user, $user_id, $provider, $adapter, $hybridauth_user_profile, $wp_user );
 		
-		
+		$orcid_id = $hybridauth_user_profile->identifier;
+		$orcid_name = $hybridauth_user_profile->displayName;
 		
 		// finally create a wordpress session for the user
 		wsl_process_login_authenticate_wp_user( $user_id, $provider, $redirect_to, $adapter, $hybridauth_user_profile, $wp_user, $orcid_name, $orcid_id );
@@ -1066,7 +1067,8 @@ function wsl_process_login_authenticate_wp_user( $user_id, $provider, $redirect_
 	do_action( "wsl_process_login_authenticate_wp_user_start", $user_id, $provider, $redirect_to, $adapter, $hybridauth_user_profile, $wp_user );
 
 	// update some fields in usermeta for the current user
-	update_user_meta( $user_id, 'wsl_current_provider', $provider );
+	
+	update_user_meta( $user_id, 'wsl_current_identifier', $orcid_id );
 
 	update_user_meta( $user_id, 'wsl_current_displayName', $hybridauth_user_profile->displayName);
 	

@@ -24,10 +24,10 @@ class Hybrid_Providers_Orcid extends Hybrid_Provider_Model_OAuth2
 		parent::initialize();
 
 		// Provider apis end-points
-		$this->api->api_base_url  = "https://orcid.org/oauth";
+		$this->api->api_base_url  = "https://sandbox.orcid.org/oauth";
 		$this->api->scope = "/authenticate" ;
-		$this->api->authorize_url = "https://orcid.org/oauth/authorize";
-		$this->api->token_url     = "https://orcid.org/oauth/token"; 
+		$this->api->authorize_url = "https://sandbox.orcid.org/oauth/authorize";
+		$this->api->token_url     = "https://sandbox.orcid.org/oauth/token"; 
 		$this->api->response_type = "code";
 
 		//$this->api->sign_token_name = "oauth_token";
