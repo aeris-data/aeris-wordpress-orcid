@@ -342,7 +342,7 @@ function aeris_nav_replace_orcid($item_output, $item) {
 			
 			$orcid = get_user_meta($user_id, 'wsl_current_identifier', true);
 		
-			if($orcid!==null && !empty($_SESSION['is_authenticated_provider'])) {
+			if($orcid!==null) {
 				
 				return '<aeris-orcid orcid="'.$orcid.'"></aeris-orcid>';
 				
@@ -590,16 +590,6 @@ function wsl_process_login_end()
 
 }
 
-
-
-
-
-	
-	
-	
-
-
- 
 
 // --------------------------------------------------------------------
 
