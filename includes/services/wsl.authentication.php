@@ -306,7 +306,7 @@ function aeris_set_widget_connexion($widget_output, $widget_type, $widget_id, $s
  			$orcid = get_user_meta($user_id, 'wsl_current_identifier', true);
 			
 			
- 			if($orcid!==null && !empty($_SESSION['is_authenticated_provider'])) {
+ 			if($orcid!==null) {
 				
 				
  				if ( 'orcid_widget' == $widget_type ) {
@@ -341,13 +341,7 @@ function aeris_nav_replace_orcid($item_output, $item) {
 			$user_id = get_current_user_id();
 			
 			$orcid = get_user_meta($user_id, 'wsl_current_identifier', true);
-			$name = get_user_meta($user_id, 'wsl_current_displayName', true);
-			var_dump($orcid);
-			echo "Auth check-------->";
-			var_dump($_SESSION['is_authenticated_provider']);
-			echo "Name";
-			var_dump($name);
-			
+		
 			if($orcid!==null && !empty($_SESSION['is_authenticated_provider'])) {
 				
 				return '<aeris-orcid orcid="'.$orcid.'"></aeris-orcid>';
@@ -1150,9 +1144,6 @@ function wsl_process_login_authenticate_wp_user( $user_id, $provider, $redirect_
 
 	// That's it. We done.
 	
-	
-	
-	$_SESSION['is_authenticated_provider'] = 1;
 	wp_safe_redirect( $redirect_to );
 	
 	
