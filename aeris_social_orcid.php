@@ -3,7 +3,7 @@
 Plugin Name: Aeris Social Orcid
 Plugin URI: http://miled.github.io/wordpress-social-login/
 Description: Allow your visitors to comment and login with social networks such as Twitter, Facebook, Google, Yahoo and more.
-Version: 2.6.8
+Version: 2.6.9
 Author: Miled
 Author URI: https://github.com/miled
 License: MIT License
