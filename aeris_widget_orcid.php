@@ -4,7 +4,7 @@ class OrcidWidget extends WP_Widget {
 
     function __construct() {
         $widget_ops = array( 'description' => __('Use this widget to add one of your custom menu as a link list widget.') );
-        parent::__construct( 'orcid_widget', __('Orcid Connexion'), $widget_ops );
+        parent::__construct( 'orcid_widget', __('Orcid Widget Connexion'), $widget_ops );
         
         
     }

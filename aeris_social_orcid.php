@@ -3,13 +3,12 @@
 Plugin Name: Aeris Social Orcid
 Plugin URI: http://miled.github.io/wordpress-social-login/
 Description: Allow your visitors to comment and login with social networks such as Twitter, Facebook, Google, Yahoo and more.
-Version: 2.7.1
+Version: 2.6.8
 Author: Miled
 Author URI: https://github.com/miled
 License: MIT License
 Text Domain: wordpress-social-login
 Domain Path: /languages
-GitHub Plugin URI: aeris-data/aeris-wordpress-orcid
 */
 
 
@@ -301,6 +300,7 @@ require_once( WORDPRESS_SOCIAL_LOGIN_ABS_PATH . 'includes/widgets/wsl.loading.sc
 
 #Widget
 include_once plugin_dir_path(__FILE__).'/webcomponents_orcid.php';
+include_once plugin_dir_path(__FILE__).'/aeris_widget_orcid.php';
 require_once plugin_dir_path(__FILE__).'/src/class.Widget_Output_Filters.php';
 //require_once plugin_dir_path(__FILE__).'/src/class-walker-aeris-nav-menu.php';
 
@@ -318,5 +318,28 @@ if( is_admin() && ( !defined( 'DOING_AJAX' ) || !DOING_AJAX ) )
 // --------------------------------------------------------------------
 
 
+# Widget Orcid
+add_action( 'widgets_init', 'aeris_wordpress_orcid' );
+
+function aeris_wordpress_orcid() {
+	
+	register_widget( 'OrcidWidget' );
+	
+}
+
+add_action('init', 'aeris_remove_connexion_link');
 
 
+function aeris_remove_connexion_link() {
+	
+	
+// 	if(is_user_logged_in()) {
+		
+// 		wp_nav_menu(array(
+// 				'menu'   => 'header-menu',
+// 				'walker' => new Walker_Aeris_Nav_Menu
+// 		));
+// 	}
+	
+	
+}
