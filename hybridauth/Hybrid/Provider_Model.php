@@ -49,7 +49,7 @@ abstract class Hybrid_Provider_Model
 	 * Hybrid_User obj, represents the current loggedin user
 	 * @var object
 	 */
-	private $user       = NULL;
+	public $user       = NULL;
 
 	/**
 	 * the provider api client (optional)
