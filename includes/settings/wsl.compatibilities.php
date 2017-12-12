@@ -45,7 +45,7 @@ function wsl_update_compatibilities()
 
 	if( ! get_option( 'wsl_settings_connect_with_label' ) )
 	{
-		update_option( 'wsl_settings_connect_with_label', _wsl__("Connect with:", 'wordpress-social-login') );
+		update_option( 'wsl_settings_connect_with_label', _wsl__("join with social login :", 'wordpress-social-login') );
 	}
 
 	if( ! get_option( 'wsl_settings_users_avatars' ) )
