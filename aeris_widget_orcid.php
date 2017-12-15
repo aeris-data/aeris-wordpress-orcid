@@ -1,4 +1,4 @@
-F<?php
+<?php
 
 class OrcidWidget extends WP_Widget {
 
