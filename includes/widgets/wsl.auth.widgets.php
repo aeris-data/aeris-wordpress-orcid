@@ -160,6 +160,15 @@ function wsl_render_auth_widget( $args = array() )
 				array( '', ' ', '$1', ';', '{', '}' ),
 					$widget_css );
 ?>
+	.wp-social-login-connect-with{
+		text-align: center;	
+	}
+	
+	.wp-social-login-provider-list{
+		margin-left: auto;
+    	margin-right: auto;
+    	text-align: center;
+	}
 </style>
 <?php
 	}
@@ -252,7 +261,10 @@ function wsl_render_auth_widget( $args = array() )
 	</div>
 
 	<div class="wp-social-login-widget-clearing"></div>
-
+	
+	<h3>Site Administrator</h3>
+	<hr />
+	<br />
 </div>
 
 <?php
@@ -469,17 +481,38 @@ add_action( 'comment_form_must_log_in_after', 'wsl_render_auth_widget_in_comment
 /**
 * Display on login form
 */
-function wsl_render_auth_widget_in_wp_login_form()
+function wsl_render_auth_widget_in_wp_login_form($var)
 {
 	$wsl_settings_widget_display = get_option( 'wsl_settings_widget_display' );
 
-	if( $wsl_settings_widget_display == 1 || $wsl_settings_widget_display == 3 )
-	{
-		echo wsl_render_auth_widget();
-	}
+// 	if( $wsl_settings_widget_display == 1 || $wsl_settings_widget_display == 3 )
+// 	{
+// 		echo wsl_render_auth_widget();
+// 	}
+$var = "Login to view the manual - into login form";
+return $var;
 }
 
-add_action( 'login_form'                      , 'wsl_render_auth_widget_in_wp_login_form' );
+
+function emqube_change_text_on_login_form($text){
+	if(in_array($GLOBALS['pagenow'], array('wp-login.php'))){
+		
+		if ($text == 'Username or Email Address'){
+			
+			$wsl_settings_widget_display = get_option( 'wsl_settings_widget_display' );
+			
+			 	if( $wsl_settings_widget_display == 1 || $wsl_settings_widget_display == 3 )
+				 	{
+				 		echo wsl_render_auth_widget();
+				 	}
+		
+		} // for login form
+		if ($text == 'Username or Email:'){$text = 'text_you_want Username or Email:';} // for forgot password
+	}
+	return $text;
+} add_filter( 'gettext', 'emqube_change_text_on_login_form' );
+//add_filter('login_form_top','wsl_render_auth_widget_in_wp_login_form', 10, 2);
+
 add_action( 'bp_before_account_details_fields', 'wsl_render_auth_widget_in_wp_login_form' );
 add_action( 'bp_before_sidebar_login_form'    , 'wsl_render_auth_widget_in_wp_login_form' );
 
