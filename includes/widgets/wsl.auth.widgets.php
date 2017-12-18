@@ -494,10 +494,18 @@ return $var;
 }
 
 
-function emqube_change_text_on_login_form($text){
+function aeris_change_text_on_login_form($text){
 	if(in_array($GLOBALS['pagenow'], array('wp-login.php'))){
 		
-		if ($text == 'Username or Email Address'){
+		$fr_text = "#\b(Nom|utilisateur|mail)\b#";
+		$en_text = "Username or Email Address";
+		
+		preg_match_all($fr_text,$text, $out, PREG_PATTERN_ORDER);
+			
+		
+		
+		
+		if ($text == 'Username or Email Address' || sizeof($out[0])>=2){
 			
 			$wsl_settings_widget_display = get_option( 'wsl_settings_widget_display' );
 			
@@ -510,8 +518,8 @@ function emqube_change_text_on_login_form($text){
 		if ($text == 'Username or Email:'){$text = 'text_you_want Username or Email:';} // for forgot password
 	}
 	return $text;
-} add_filter( 'gettext', 'emqube_change_text_on_login_form' );
-//add_filter('login_form_top','wsl_render_auth_widget_in_wp_login_form', 10, 2);
+} 
+add_filter( 'gettext', 'aeris_change_text_on_login_form' );
 
 add_action( 'bp_before_account_details_fields', 'wsl_render_auth_widget_in_wp_login_form' );
 add_action( 'bp_before_sidebar_login_form'    , 'wsl_render_auth_widget_in_wp_login_form' );
