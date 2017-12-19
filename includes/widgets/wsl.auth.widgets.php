@@ -41,6 +41,20 @@ if( !defined( 'ABSPATH' ) ) exit;
 function wsl_render_auth_widget( $args = array() )
 {
 	$auth_mode = isset( $args['mode'] ) && $args['mode'] ? $args['mode'] : 'login';
+	
+	
+	if(get_locale() == 'fr_FR') {
+		
+		$header_widget_login = "Utilisateurs / Resp. données";
+		$connect_with_label = "se connecter avec :";
+		$site_admin_label = "Administrateur du Site";
+		
+		
+	} else {
+		$header_widget_login = "Data Users / Providers";
+		$connect_with_label = "join <strong>with social login</strong> :";
+		$site_admin_label = "Site Administrator";
+	}
 
 	// validate auth-mode
 	if( ! in_array( $auth_mode, array( 'login', 'link', 'test' ) ) )
@@ -126,13 +140,7 @@ function wsl_render_auth_widget( $args = array() )
 		$authenticate_base_url = home_url() . "/?action=wordpress_social_authenticate&mode=link&";
 	}
 
-	// Connect with caption
-	$connect_with_label = _wsl__( get_option( 'wsl_settings_connect_with_label' ), 'wordpress-social-login' );
-
-	$connect_with_label = isset( $args['caption'] ) ? $args['caption'] : $connect_with_label;
-
-	// HOOKABLE:
-	$connect_with_label = apply_filters( 'wsl_render_auth_widget_alter_connect_with_label', $connect_with_label );
+	
 ?>
 
 <!--
@@ -161,7 +169,7 @@ function wsl_render_auth_widget( $args = array() )
 					$widget_css );
 ?>
 	.wp-social-login-connect-with{
-		text-align: center;	
+		text-align: justify;	
 	}
 	
 	.wp-social-login-provider-list{
@@ -179,9 +187,10 @@ function wsl_render_auth_widget( $args = array() )
 
 <div class="wp-social-login-widget">
 	<div class="social-header-login">
-	<h3>Data Users / Providers</h3>
+	<h3><?php echo $header_widget_login; ?></h3>
 	<hr />
 	</div>
+	
 	<div class="wp-social-login-connect-with"><?php echo $connect_with_label; ?></div>
 
 	<div class="wp-social-login-provider-list">
@@ -269,7 +278,7 @@ function wsl_render_auth_widget( $args = array() )
 
 	<div class="wp-social-login-widget-clearing"></div>
 	
-	<h3>Site Administrator</h3>
+	<h3><?php echo $site_admin_label; ?></h3>
 	<hr />
 	<br />
 </div>
