@@ -169,13 +169,19 @@ function wsl_render_auth_widget( $args = array() )
     	margin-right: auto;
     	text-align: center;
 	}
+	.social-header-login {
+	     height: 45px;
+	}
 </style>
 <?php
 	}
 ?>
 
 <div class="wp-social-login-widget">
-
+	<div class="social-header-login">
+	<h3>Data Users / Providers</h3>
+	<hr />
+	</div>
 	<div class="wp-social-login-connect-with"><?php echo $connect_with_label; ?></div>
 
 	<div class="wp-social-login-provider-list">
@@ -187,7 +193,8 @@ function wsl_render_auth_widget( $args = array() )
 	$wsl_settings_use_popup = function_exists( 'wp_is_mobile' ) ? wp_is_mobile() ? 2 : $wsl_settings_use_popup : $wsl_settings_use_popup;
 
 	$no_idp_used = true;
-
+	
+	
 	// display provider icons
 	foreach( $WORDPRESS_SOCIAL_LOGIN_PROVIDERS_CONFIG AS $item )
 	{

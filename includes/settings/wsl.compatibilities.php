@@ -45,7 +45,17 @@ function wsl_update_compatibilities()
 
 	if( ! get_option( 'wsl_settings_connect_with_label' ) )
 	{
-		update_option( 'wsl_settings_connect_with_label', _wsl__("join with social login :", 'wordpress-social-login') );
+		
+		
+		if(get_locale() == 'fr_FR') {
+			
+			update_option( 'wsl_settings_connect_with_label', _wsl__("se connecter avec <strong>orcid</strong> :", 'wordpress-social-login') );
+			
+		} else {
+			
+			update_option( 'wsl_settings_connect_with_label', _wsl__("join <strong>with social login</strong> :", 'wordpress-social-login') );
+			
+		}
 	}
 
 	if( ! get_option( 'wsl_settings_users_avatars' ) )
